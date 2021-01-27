@@ -1,4 +1,4 @@
-console.log('connected');
+console.log('CONNECTED!');
 
 const pies = [
   {
@@ -63,6 +63,7 @@ const pies = [
   },
 ];
 
+
 const printToDom = (divId, textToPrint) => {
   const selectedDiv = document.querySelector(divId);
   selectedDiv.innerHTML = textToPrint;
@@ -70,7 +71,6 @@ const printToDom = (divId, textToPrint) => {
 
 const pieBuilder = (taco) => {
   let domString = '';
-
   for (let i = 0; i < taco.length; i++) {
     domString += `<div class="card my-2" style="width: 18rem;" id=${i}>
                     <div class="img-container" style="background-image: url('${taco[i].imageUrl}');"></div>
@@ -87,16 +87,48 @@ const pieBuilder = (taco) => {
 
   printToDom('#pies', domString);
 }
+// C in CRUD: Create!
+const getFormInfo = (e) => {
+  //Stop the page from refreshing
+  e.preventDefault();
+    const name = document.querySelector('#name').value;
+    const ingredients = document.querySelector('#ingredients').value;
+    const bakeTemp = document.querySelector('#bakeTemp').value;
+    const drinkPairing = document.querySelector('#drinkPairing').value;
+    const imageUrl = document.querySelector('#imageUrl').value;
+    const instructor = document.querySelector('#instructor').value;
+    const iceCream = document.querySelector('#iceCream').value;
+
+
+    //Short hand object notation to add values to obj
+    const obj = {
+      name,
+      ingredients,
+      bakeTemp,
+      drinkPairing,
+      imageUrl,
+      instructor,
+      iceCream,
+    }  
+    
+    //Pushing the new object up to the pies array
+    pies.push(obj);
+
+    //Rebuilding the DOM
+    pieBuilder(pies);
+
+    document.querySelector('form').reset();
+}
 
 const handleButtonClick = (e) => {
   const buttonId = e.target.id;
 
-  //Changing background color based on button clicked
+  // CHANGING BG COLOR BASED ON BUTTON CLICK
   if (buttonId === 'Trinity') {
     // DARK MODE
     document.querySelector('body').style.backgroundColor = '#000';
   } else if (buttonId === 'Doc') {
-    //LIGHT MODE
+    // LIGHT MODE
     document.querySelector('body').style.backgroundColor = '#FFF';
   } else if (buttonId === 'Aja') {
     // MEDIUM MODE
@@ -105,8 +137,10 @@ const handleButtonClick = (e) => {
     // DEFAULT
     document.querySelector('body').style.backgroundColor = 'rgb(175, 196, 175)';
   }
-  //Update THE PIES BASED ON BUTTON CLICKED
+
+  // UPDATE THE PIES BASED ON BUTTON CLICKED
   const selectedPies = [];
+  // pies[0].instructor // 'Doc'
   for (let i = 0; i < pies.length; i++) {
     if (pies[i].instructor === buttonId) {
       selectedPies.push(pies[i]);
@@ -114,17 +148,23 @@ const handleButtonClick = (e) => {
   }
 
   if (buttonId === 'All') {
+    // PRINT ALL THE PIES
     pieBuilder(pies);
   } else {
     pieBuilder(selectedPies);
   }
+
 }
+
 const buttonEvents = () => {
   document.querySelector('#All').addEventListener('click', handleButtonClick);
   document.querySelector('#Doc').addEventListener('click', handleButtonClick);
   document.querySelector('#Aja').addEventListener('click', handleButtonClick);
   document.querySelector('#Trinity').addEventListener('click', handleButtonClick);
+  document.querySelector('form').addEventListener('submit', getFormInfo);    
 }
+
+
 const init = () => {
   buttonEvents();
   pieBuilder(pies);
