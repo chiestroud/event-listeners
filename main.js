@@ -1,4 +1,4 @@
-console.log('connected');
+console.log('CONNECTED!');
 
 const pies = [
   {
@@ -63,6 +63,10 @@ const pies = [
   },
 ];
 
+// let filtered = false;
+// const selectedPies = [];
+
+
 const printToDom = (divId, textToPrint) => {
   const selectedDiv = document.querySelector(divId);
   selectedDiv.innerHTML = textToPrint;
@@ -70,33 +74,105 @@ const printToDom = (divId, textToPrint) => {
 
 const pieBuilder = (taco) => {
   let domString = '';
+  // for (let i = 0; i < taco.length; i++) {
+  //   domString += `<div class="card my-2" style="width: 18rem;" id=${i}>
+  //                   <div class="img-container" style="background-image: url('${taco[i].imageUrl}');"></div>
+  //                   <div class="card-body">
+  //                     <p class="card-text">${taco[i].name}</p>
+  //                     <p class="card-text">${taco[i].ingredients}</p>
+  //                     <p class="card-text">${taco[i].bakeTemp}</p>
+  //                     <p class="card-text">${taco[i].drinkPairing}</p>
+  //                     <p class="card-text">${taco[i].iceCream}</p>
+  //                     <button type="button" class="btn btn-danger" id="${i}">Delete</button>
+  //                   </div>
+  //                 </div>`;
+  // }
+//   taco.forEach((item, i) => {
+//     domString += `<div class="card my-2" style="width: 18rem;" id=${i}>
+//                     <div class="img-container" style="background-image: url('${item.imageUrl}');"></div>
+//                       <div class="card-body">
+//                         <p class="card-text">${item.name}</p>
+//                         <p class="card-text">${item.ingred of tacoients}</p>
+//                         <p class="card-text">${item.bakeTemp}</p>
+//                         <p class="card-text">${item.drinkPairing}</p>
+//                         <p class="card-text">${item.iceCream}</p>
+//                         <button type="button" class="btn btn-danger" id="${i}">Delete</button>
+//                    </div>
+//                   </div>`;
+//  })
 
-  for (let i = 0; i < taco.length; i++) {
-    domString += `<div class="card my-2" style="width: 18rem;" id=${i}>
-                    <div class="img-container" style="background-image: url('${taco[i].imageUrl}');"></div>
-                    <div class="card-body">
-                      <p class="card-text">${taco[i].name}</p>
-                      <p class="card-text">${taco[i].ingredients}</p>
-                      <p class="card-text">${taco[i].bakeTemp}</p>
-                      <p class="card-text">${taco[i].drinkPairing}</p>
-                      <p class="card-text">${taco[i].iceCream}</p>
-                      <button type="button" class="btn btn-danger" id="${i}">Delete</button>
-                    </div>
-                  </div>`;
+ // FOR IN LOOP
+  for (const eachTaco of taco) {
+    domString += `<div class="card my-2" style="width: 18rem;" id=${eachTaco}>
+                     <div class="img-container" style="background-image: url('${eachTaco.imageUrl}');"></div>
+                       <div class="card-body">
+                         <p class="card-text">${eachTaco.name}</p>
+                         <p class="card-text">${eachTaco.ingredients}</p>
+                         <p class="card-text">${eachTaco.bakeTemp}</p>
+                         <p class="card-text">${eachTaco.drinkPairing}</p>
+                         <p class="card-text">${eachTaco.iceCream}</p>
+                         <button type="button" class="btn btn-danger" id="${eachTaco}">Delete</button>
+                      </div>
+                   </div>`;
   }
 
+
   printToDom('#pies', domString);
+}
+// C in CRUD: Create!
+const getFormInfo = (e) => {
+  //Stop the page from refreshing
+  e.preventDefault();
+    const name = document.querySelector('#name').value;
+    const ingredients = document.querySelector('#ingredients').value;
+    const bakeTemp = document.querySelector('#bakeTemp').value;
+    const drinkPairing = document.querySelector('#drinkPairing').value;
+    const imageUrl = document.querySelector('#imageUrl').value;
+    const instructor = document.querySelector('#instructor').value;
+    const iceCream = document.querySelector('#iceCream').value;
+
+
+    //Short hand object notation to add values to obj
+    const obj = {
+      name,
+      ingredients,
+      bakeTemp,
+      drinkPairing,
+      imageUrl,
+      instructor,
+      iceCream,
+    }  
+    
+    //Pushing the new object up to the pies array
+    pies.push(obj);
+
+    //Rebuilding the DOM
+    pieBuilder(pies);
+
+    document.querySelector('form').reset();
+}
+
+// D in CRUD: Delete the Pie
+const deletePie = (e) => {
+  const targetType = e.target.type;
+  const targetId = e.target.id;
+
+  if (targetType === 'button') {
+    // DO SOMETHING
+    pies.splice(targetId, 1);
+  }
+    pieBuilder(pies);
 }
 
 const handleButtonClick = (e) => {
   const buttonId = e.target.id;
 
-  //Changing background color based on button clicked
+  // CHANGING BG COLOR BASED ON BUTTON CLICK
   if (buttonId === 'Trinity') {
     // DARK MODE
     document.querySelector('body').style.backgroundColor = '#000';
   } else if (buttonId === 'Doc') {
-    //LIGHT MODE
+    // LIGHT MODE
     document.querySelector('body').style.backgroundColor = '#FFF';
   } else if (buttonId === 'Aja') {
     // MEDIUM MODE
@@ -105,8 +181,10 @@ const handleButtonClick = (e) => {
     // DEFAULT
     document.querySelector('body').style.backgroundColor = 'rgb(175, 196, 175)';
   }
-  //Update THE PIES BASED ON BUTTON CLICKED
+
+  // UPDATE THE PIES BASED ON BUTTON CLICKED
   const selectedPies = [];
+  // pies[0].instructor // 'Doc'
   for (let i = 0; i < pies.length; i++) {
     if (pies[i].instructor === buttonId) {
       selectedPies.push(pies[i]);
@@ -114,17 +192,31 @@ const handleButtonClick = (e) => {
   }
 
   if (buttonId === 'All') {
+    // PRINT ALL THE PIES
+    filtered = false;
     pieBuilder(pies);
   } else {
+    filtered = true;
     pieBuilder(selectedPies);
   }
+
+  console.log(filtered);
+
 }
+
 const buttonEvents = () => {
   document.querySelector('#All').addEventListener('click', handleButtonClick);
   document.querySelector('#Doc').addEventListener('click', handleButtonClick);
   document.querySelector('#Aja').addEventListener('click', handleButtonClick);
   document.querySelector('#Trinity').addEventListener('click', handleButtonClick);
+ 
+  // Targeting the Delete Button
+  document.querySelector('#pies').addEventListener('click', deletePie);
+  
+  document.querySelector('form').addEventListener('submit', getFormInfo);    
 }
+
+
 const init = () => {
   buttonEvents();
   pieBuilder(pies);
